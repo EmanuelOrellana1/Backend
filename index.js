@@ -37,7 +37,7 @@ app.listen(3000, () => {
 });
 
 
-const Producto = mongoose.model('Producto', {
+const DetalleVenta = mongoose.model('DetalleVenta', {
     name: String,
     direccion: String,
     numerotel: String,
@@ -47,8 +47,16 @@ const Producto = mongoose.model('Producto', {
 });
 
 const Users = mongoose.model('Users', {
+    fullname: String,
     email: String,
     password: String
+});
+
+const Productos= mongoose.model('Productos', {
+    name: String,
+    descripcion: String,
+    presio: Number
+    
 });
 
 app.post('/user', async (req, res) => {
@@ -62,7 +70,7 @@ app.post('/user', async (req, res) => {
 });
 
 app.post('/vender', async (req, res) => {
-    const venta = new Producto(req.body);
+    const venta = new DetalleVenta(req.body);
     try {
         await venta.save();
         res.send(venta);
