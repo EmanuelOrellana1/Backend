@@ -3,13 +3,6 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*'); // Permitir todas las fuentes
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    next();
-  });
-
 // Función para cifrar la contraseña
 function hashPassword(password) {
     const hash = crypto.createHash('sha512');
