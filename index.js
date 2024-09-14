@@ -52,12 +52,17 @@ const Users = mongoose.model('Users', {
     password: String
 });
 
-const Productos= mongoose.model('Productos', {
+const Productos = mongoose.model('Productos', {
     name: String,
     descripcion: String,
     presio: Number
-    
+
 });
+
+const visitas = mongoose.model('visitas', {
+    view_count: Number
+});
+
 
 app.post('/user', async (req, res) => {
     const users = new Users(req.body);
@@ -112,7 +117,7 @@ app.delete('/animals/:id', async (req, res) => {
     }
 });
 
-app.post('/register', verificarToken,async (req, res) => {
+app.post('/register', verificarToken, async (req, res) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = hashPassword(req.body.password);
@@ -142,9 +147,36 @@ app.post('/login', async (req, res) => {
             return res.send({ message: "User not found" });
         }
         console.log("Iniciando secion desde el navegador")
-        return res.send({ message: "Welcome"});
+        return res.send({ message: "Welcome" });
     } catch (error) {
         return res.status(500
         ).send(error);
     }
 });
+
+app.post('/visitas', async (req, res) => {
+    try {
+        // Busca el documento de vistas, si no existe lo crea con view_count = 1
+        const resultado = await visitas.findOneAndUpdate(
+            {}, // No hay filtro, asume que es un único registro
+            { $inc: { view_count: 1 } }, // Incrementa view_count en 1
+            { new: true, upsert: true } // Crea el documento si no existe
+        );
+
+        res.status(200).json({ mensaje: "Vista actualizada", vistas: resultado.view_count });
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error al actualizar las vistas", error });
+    }
+});
+
+app.get('/visitas', async (req, res) => {
+    try {
+        // Busca el único documento de visitas
+        const resultado = await visitas.findOne({});
+        console.log(resultado)
+        res.status(200).json({ vistas: resultado.view_count });
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error al obtener las vistas", error });
+    }
+});
+module.exports = app;
