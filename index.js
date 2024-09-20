@@ -179,4 +179,15 @@ app.get('/visitas', async (req, res) => {
         res.status(500).json({ mensaje: "Error al obtener las vistas", error });
     }
 });
+
+app.get('/dashboard', async (req, res) => {
+    try {
+        // Busca el único documento de visitas
+        const resultado = await DetalleVenta.find();
+        console.log(resultado)
+        res.status(200).json({ totaldetalleventa: resultado});
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error al obtener informacion del dashboard", error });
+    }
+});
 module.exports = app;
